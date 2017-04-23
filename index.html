@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="utf-8">
+  <title>Aire de jeux Rennes</title>
+</head>
+<body>
+
+  <h2>Aire de jeux Rennes</h2>
+  <div id="result" style="color:red"></div>
+
+  <script>
+    var getJSON = function(url) {
+      return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function() {
+          var status = xhr.status;
+          if (status == 200) {
+            resolve(xhr.response);
+          } else {
+            reject(status);
+          }
+        };
+        xhr.send();
+      });
+    };
+
+    getJSON('https://data.rennesmetropole.fr/api/records/1.0/search/?dataset=aires-de-jeux-des-espaces-verts-rennes&rows=1000').then(function(data) {
+      var newUl = document.createElement('ul')
+      for (var key in data.records) {
+        newLi = document.createElement('li')
+        newLi.innerText = data.records[key].fields.nom
+        newUl.appendChild(newLi)
+      }
+      result.appendChild(newUl)
+    }, function(status) {
+      alert('Something went wrong.');
+    });
+  </script>
+
+</body>
+</html>
